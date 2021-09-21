@@ -1,35 +1,28 @@
-import 'package:cake_time/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:date_field/date_field.dart';
-import 'package:cake_time/main.dart';
-import 'dart:async';
 
-import 'dart:async';
-
-class AddBirthdayScreen extends StatefulWidget {
-  const AddBirthdayScreen({Key? key}) : super(key: key);
+class EditScreen extends StatefulWidget {
+  const EditScreen({Key? key}) : super(key: key);
 
   @override
-  _AddBirthdayScreenState createState() => _AddBirthdayScreenState();
+  _EditScreenState createState() => _EditScreenState();
 }
 
-class _AddBirthdayScreenState extends State<AddBirthdayScreen> {
+class _EditScreenState extends State<EditScreen> {
   String? dropdownValue = "Select relationship";
   DateTime selectedDate = DateTime.now();
-
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
         firstDate: DateTime(1900, 8),
-        lastDate: DateTime.now());
+        lastDate: DateTime(2101));
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
       });
   }
-
   var relationshipTypes = [
     "Select relationship",
     "Family",
@@ -37,15 +30,11 @@ class _AddBirthdayScreenState extends State<AddBirthdayScreen> {
     "Co-worker",
     "Significant other"
   ];
-
   @override
   Widget build(BuildContext context) {
-    var dateValue = TextEditingController();
-    // final firstDate = DateTime(DateTime.now().year - 120);
-    //final lastDate = DateTime.now();
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add a Birthday"),
+        title: Text("Edit"),
         centerTitle: true,
       ),
       body: Column(
@@ -65,17 +54,17 @@ class _AddBirthdayScreenState extends State<AddBirthdayScreen> {
               Container(
                 margin: EdgeInsets.only(bottom: 20),
                 child: IconButton(
-                    iconSize: 60,
-                    icon: const Icon(Icons.camera_alt_outlined),
-                    onPressed: () {
-                      //do something
-                    },
-                  ),
+                  iconSize: 60,
+                  icon: const Icon(Icons.camera_alt_outlined),
+                  onPressed: () {
+                    //do something
+                  },
                 ),
-              ],
+              ),
+            ],
           ),
           Container(
-           margin: EdgeInsets.only(left: 15),
+            margin: EdgeInsets.only(left: 15),
             child: Text(
               "Name:",
             ),
@@ -84,21 +73,21 @@ class _AddBirthdayScreenState extends State<AddBirthdayScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                  margin: EdgeInsets.only(bottom: 35),
-                  padding: const EdgeInsets.all(8),
-                  width: 380,
-                  child: Container(
-                    height: 50,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintStyle: TextStyle(color: Colors.black45),
-                        labelText: "Enter name",
+                margin: EdgeInsets.only(bottom: 35),
+                padding: const EdgeInsets.all(8),
+                width: 380,
+                child: Container(
+                  height: 50,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintStyle: TextStyle(color: Colors.black45),
+                      labelText: "Enter name",
 
-                      ),
                     ),
                   ),
                 ),
+              ),
             ],
           ),
 
@@ -171,8 +160,8 @@ class _AddBirthdayScreenState extends State<AddBirthdayScreen> {
                   ),
                 ),
               ),
-              ],
-              ),
+            ],
+          ),
 
           Container(
             margin: EdgeInsets.only(left: 15),
@@ -205,7 +194,7 @@ class _AddBirthdayScreenState extends State<AddBirthdayScreen> {
             children: [
               RaisedButton(
                 child: Text(
-                  "Add to List",
+                  "Confirm",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -222,3 +211,5 @@ class _AddBirthdayScreenState extends State<AddBirthdayScreen> {
     );
   }
 }
+
+
