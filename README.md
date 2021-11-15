@@ -1,6 +1,6 @@
 # birthday_reminder
 
-A new Flutter project.
+Birthday reminder app
 
 ## Getting Started
 
