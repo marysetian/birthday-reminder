@@ -26,7 +26,6 @@ class _AddBirthdayScreenState extends State<AddBirthdayScreen> {
 
       });
     });
-    blah();
   }
   Future<void> getCurrentUser() async {
     final user = _auth.currentUser;
@@ -35,29 +34,7 @@ class _AddBirthdayScreenState extends State<AddBirthdayScreen> {
       print("Current user UID is:" + loginUser.uid.toString());
     }
   }
-  void blah() {
-      FirebaseDatabase.instance
-          .reference()
-          .child(loginUser.uid.toString())
-          .once()
-          .then((datasnapshot) {
-        print("Succesully loaded the data");
-        print(datasnapshot);
-        //path becomes the key
-        print(datasnapshot.key);
-        print(datasnapshot.value);
-        //save everything into a list
-        var uidList = [];
-        //iterate through the hashmap
-        datasnapshot.value.forEach((k, v) {
-          print(k);
-          print(v);
-          uidList.add(v["uid"]);
-        });
-        print("Final uid list: ");
-        print(uidList);
-      });
-  }
+
   var _controller = TextEditingController();
   var timeController = TextEditingController();
   var giftController = TextEditingController();
