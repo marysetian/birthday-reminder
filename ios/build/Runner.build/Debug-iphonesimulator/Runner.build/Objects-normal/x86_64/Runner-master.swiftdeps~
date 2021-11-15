@@ -1,0 +1,6 @@
+version: "Apple Swift version 5.5 (swiftlang-1300.0.31.1 clang-1300.0.29.1)"
+options: "657833402df29caaa95329784bc68ae4a91c37b10a035748167db7646d21f8d3"
+build_start_time: [1633372081, 775836944]
+build_end_time: [1633372081, 872940063]
+inputs:
+  "/Users/marysetian/StudioProjects/cake_time/ios/Runner/AppDelegate.swift": !private [1632591372, 381570816]

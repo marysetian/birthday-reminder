@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1078442478981",
+    "firebase_url": "https://birthday-reminder-392c8-default-rtdb.firebaseio.com",
+    "project_id": "birthday-reminder-392c8",
+    "storage_bucket": "birthday-reminder-392c8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1078442478981:android:8b7d8d789a33ea96e348ec",
+        "android_client_info": {
+          "package_name": "com.marysetian.cake_time"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1078442478981-4c29c0f4emlomb60um67gntabufu7mtl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2DZv-EPGWjkGq5tYgm-hNal7TOAC_Akg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1078442478981-4c29c0f4emlomb60um67gntabufu7mtl.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1078442478981-2svlur4b61jhptb1iucffe1lqiirhrue.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.marysetian.cakeTime"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

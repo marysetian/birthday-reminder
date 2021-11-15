@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:date_field/date_field.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class EditScreen extends StatefulWidget {
   const EditScreen({Key? key}) : super(key: key);
@@ -33,9 +35,21 @@ class _EditScreenState extends State<EditScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xfff8edeb),
       appBar: AppBar(
-        title: Text("Edit"),
+        title:Text(
+        "E D I T",
+        style: GoogleFonts.getFont(
+          'Noto Serif',
+          //textStyle: Theme.of(context).textTheme.headline4,
+          fontSize: 25,
+          fontWeight: FontWeight.w500,
+          //fontStyle: FontStyle.italic,
+        ),
+      ),
         centerTitle: true,
+        backgroundColor: Color(0xffe8a598),
+
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,7 +206,7 @@ class _EditScreenState extends State<EditScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              RaisedButton(
+              ElevatedButton(
                 child: Text(
                   "Confirm",
                   style: TextStyle(

@@ -23,7 +23,23 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  firebase_core: ^1.7.0
+  firebase_auth: ^3.1.2
+  firebase_database: ^8.0.0
   date_field: ^2.0.1
+  awesome_notifications: any
+  google_fonts: ^2.1.0
+  date_time_picker: ^2.1.0
+  flutter_local_notifications: ^9.0.2
+  timezone: ^0.8.0
+  overlay_support: ^1.2.1
+  flutter_background_service: ^0.1.5
+  rxdart: ^0.27.2
+
+
+
+
+
 
 
 
@@ -46,6 +62,13 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/caketimeiconv8.png
+    - assets/caketimeiconother.png
+    - assets/bloopie.png
+    - assets/irishik.png
+    - assets/moreinfo.png
+    - android/app/src/main/res/drawable/app_icon.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
