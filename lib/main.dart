@@ -4,12 +4,11 @@ import 'package:cake_time/signup_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  //await NotificationService().initNotification();
+  await NotificationService().initNotification();
   runApp(MyApp());
 }
 
@@ -17,9 +16,40 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      debugShowCheckedModeBanner: false,
+      theme: new ThemeData(
+        scaffoldBackgroundColor: Color(0xfff8edeb),
+        appBarTheme: AppBarTheme(
+          centerTitle: true,
+          titleTextStyle: TextStyle(
+            fontFamily: 'PlayfairDisplay',
+            fontSize: 30,
+            fontWeight: FontWeight.w500,
+          ),
+          backgroundColor: Color(0xffe8a598),
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            primary: Color(0xff30150d),
+            textStyle: TextStyle(
+              fontFamily: 'NotoSerif',
+              fontWeight: FontWeight.w500,
+              fontSize: 17,
+            ),
+            shape: StadiumBorder(),
+            side: BorderSide(
+              width: 2.0,
+              color: Color(0xff30150d),
+            ),
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          labelStyle: TextStyle(color: Colors.black45),
+          hintStyle: TextStyle(color: Colors.black45),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Color(0xff30150d)),
+          ),
+        ),
       ),
       home: MyHomePage(title: ''),
     );
@@ -42,161 +72,132 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff8edeb),
       body: SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints:
-              BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
-          child: Column(
-            children: [
-              Expanded(
-                flex: 40,
-                child: Container(
-                  margin: EdgeInsets.only(right: 20, left: 20, top: 30,),
-                  child: ClipRRect(
-                    child: Image(
-                      image: AssetImage('assets/caketimeiconother.png'),
-                      fit: BoxFit.cover,
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
+          },
+          child: ConstrainedBox(
+              constraints:
+                  BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+              child: Column(
+                children: [
+                  Expanded(
+                    flex: 20,
+                    child: Container(
+                      margin: EdgeInsets.only(
+                        right: 20,
+                        left: 20,
+                        top: 30,
+                      ),
+                      child: ClipRRect(
+                        child: Image(
+                          image: AssetImage('assets/caketimeiconother.png'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Expanded(
-                flex: 50,
-                child: Column(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(top: 20, bottom: 20),
-                      child: Text(
-                        "login",
-                        style: GoogleFonts.getFont(
-                          'Noto Serif',
-                          fontSize: 32,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xff30150d),
+                  Expanded(
+                    flex: 30,
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: 20, bottom: 30),
+                          child: GestureDetector(
+                            child: Text("CakeTime",
+                                style: TextStyle(
+                                  fontFamily: 'PlayfairDisplay',
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xffe8a598),
+                                )),
+                          ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                          left: 35, right: 35, bottom: 10, top: 10),
-                      child: TextField(
-                        controller: emailController,
-                        obscureText: false,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Email Address',
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                          left: 35, right: 35, bottom: 10, top: 10),
-                      child: TextField(
-                        controller: passwordController,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Password',
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                        top: 10,
-                        bottom: 20,
-                      ),
-                      child: Text(
-                        "Forgot Password?",
-                        style: TextStyle(),
-                      ),
-                    ),
-
-
-                    Expanded(
-                      child: Container(
-                        width: 100,
-                        margin: EdgeInsets.only(top: 10, bottom: 10),
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            shape: StadiumBorder(),
-                            side: BorderSide(
-                              width: 2.0,
-                              color: Color(0xff30150d),
+                        Container(
+                          margin: EdgeInsets.only(
+                              left: 35, right: 35, bottom: 30, top: 30),
+                          child: GestureDetector(
+                            child: TextField(
+                              controller: emailController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                ),
+                                labelText: 'Email Address',
+                              ),
                             ),
                           ),
-                          child: Text(
-                            "login",
-                            style: GoogleFonts.getFont(
-                              'Noto Serif',
-                              fontSize: 15,
-                              color: Color(0xff30150d),
-                              fontWeight: FontWeight.w500,
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(
+                              left: 35, right: 35, bottom: 10, top: 10),
+                          child: TextField(
+                            controller: passwordController,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              labelText: 'Password',
                             ),
                           ),
-                          onPressed: () {
-                            FirebaseAuth.instance
-                                .signInWithEmailAndPassword(
-                                    email: emailController.text,
-                                    password: passwordController.text)
-                                .then((value) {
-                              print("Login successful");
+                        ),
+                        Container(
+                          width: 100,
+                          margin: EdgeInsets.only(top: 35, bottom: 10),
+                          child: OutlinedButton(
+                            child: Text(
+                              "Login",
+                            ),
+                            onPressed: () {
+                              FirebaseAuth.instance
+                                  .signInWithEmailAndPassword(
+                                      email: emailController.text,
+                                      password: passwordController.text)
+                                  .then((value) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text("Successfully logged in!")),
+                                );
+                                print("Login successful");
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          BirthdaysFirebaseScreen()),
+                                );
+                              }).catchError((error) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text("User does not exist.")),
+                                );
+                                print(error.toString());
+                              });
+                            },
+                          ),
+                        ),
+                        Container(
+                          width: 100,
+                          child: OutlinedButton(
+                            child: Text(
+                              "Signup",
+                            ),
+                            onPressed: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        BirthdaysFirebaseScreen()),
+                                    builder: (context) => SignupScreen()),
                               );
-                            }).catchError((error) {
-                              print("Login failed");
-                              print(error.toString());
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        width: 100,
-                        margin: EdgeInsets.only(top: 10, bottom: 10),
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                              shape: StadiumBorder(),
-                              side: BorderSide(
-                                width: 2.0,
-                                color: Color(0xff30150d),
-                              )),
-                          child: Text(
-                            "signup",
-                            style: GoogleFonts.getFont(
-                              'Noto Serif',
-                              fontSize: 15,
-                              color: Color(0xff30150d),
-                              fontWeight: FontWeight.w500,
-                            ),
+                            },
                           ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SignupScreen()),
-                            );
-                          },
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 10,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [],
-                ),
-              ),
-            ],
-          ),
+                  ),
+                ],
+              )),
         ),
       ),
     );

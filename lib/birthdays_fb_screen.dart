@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cake_time/add_birthday_screen.dart';
 import 'package:cake_time/more_info_screen.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class BirthdaysFirebaseScreen extends StatefulWidget {
   const BirthdaysFirebaseScreen({Key? key}) : super(key: key);
@@ -20,6 +19,7 @@ class _BirthdaysFirebaseScreenState extends State<BirthdaysFirebaseScreen> {
   var turningAge;
   late FirebaseAuth _auth = FirebaseAuth.instance;
   late User loginUser;
+  bool isNew = false;
 
   @override
   void initState() {
@@ -28,15 +28,27 @@ class _BirthdaysFirebaseScreenState extends State<BirthdaysFirebaseScreen> {
       setState(() {});
     });
     refreshBirthdayList();
-    FirebaseDatabase.instance.reference().child(loginUser.uid.toString()).onChildChanged.listen((event) {
+    FirebaseDatabase.instance
+        .reference()
+        .child(loginUser.uid.toString())
+        .onChildChanged
+        .listen((event) {
       print("Data has been changed");
       refreshBirthdayList();
     });
-    FirebaseDatabase.instance.reference().child(loginUser.uid.toString()).onChildRemoved.listen((event) {
+    FirebaseDatabase.instance
+        .reference()
+        .child(loginUser.uid.toString())
+        .onChildRemoved
+        .listen((event) {
       print("Data has been removed");
       refreshBirthdayList();
     });
-    FirebaseDatabase.instance.reference().child(loginUser.uid.toString()).onChildAdded.listen((event) {
+    FirebaseDatabase.instance
+        .reference()
+        .child(loginUser.uid.toString())
+        .onChildAdded
+        .listen((event) {
       print("Data has been added");
       refreshBirthdayList();
     });
@@ -46,31 +58,20 @@ class _BirthdaysFirebaseScreenState extends State<BirthdaysFirebaseScreen> {
     var user = _auth.currentUser;
     if (user != null) {
       loginUser = user;
-      setState(() {
-
-      });
-      print("Current user UID is:" + loginUser.uid.toString());
+      setState(() {});
     }
   }
 
   void refreshBirthdayList() {
-    FirebaseDatabase.instance.reference().child(loginUser.uid.toString()).once().then((datasnapshot) {
-      print("Successfully loaded the data");
-      print(datasnapshot);
-      //path becomes the key
-      print(datasnapshot.key);
-      print(datasnapshot.value);
-      //save everything into a list
+    FirebaseDatabase.instance
+        .reference()
+        .child(loginUser.uid.toString())
+        .once()
+        .then((datasnapshot) {
       var birthdayTmpList = [];
-      //iterate through the hashmap
       datasnapshot.value.forEach((k, v) {
-        print(k);
-        print(v);
         birthdayTmpList.add(v);
       });
-      print("Final birthday list: ");
-      print(birthdayTmpList);
-
       var todayBirthdayTmpList = [];
       var upcomingBirthdayTmpList = [];
       birthdayTmpList.forEach((v) {
@@ -85,8 +86,7 @@ class _BirthdaysFirebaseScreenState extends State<BirthdaysFirebaseScreen> {
             (personMonth == currentMonth && personDay > currentDay) ||
             (personMonth == currentMonth && personDay == currentDay)) {
           turningAge = (currentYear - personYear).toString();
-        }
-        else {
+        } else {
           turningAge = ((currentYear + 1) - personYear).toString();
         }
 
@@ -105,32 +105,36 @@ class _BirthdaysFirebaseScreenState extends State<BirthdaysFirebaseScreen> {
       });
       //do set state to show it's been updated
       setState(() {});
-
       upcomingBirthdays = upcomingBirthdayTmpList;
       todaysBirthdays = todayBirthdayTmpList;
-    }).catchError((error) {
-      print("Failed to load data" + error.toString());
+      upcomingBirthdays.forEach((v) {
+        v["imageURL"] = 'assets/upcoming3.png';
+      });
+    }).catchError((error) async {
+      await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Text(
+                  "Looks like you don't have any birthdays entered. To get started, click on the add icon on the bottom app bar!"),
+              contentTextStyle: TextStyle(
+                fontFamily: 'NotoSerif',
+                fontSize: 17,
+                color: Color(0xff30150d),
+                fontWeight: FontWeight.w500,
+              ),
+            );
+          });
     });
   }
-
-
-  //load all the birthday info from Firebase Database and display them in ListView
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff8edeb),
       appBar: AppBar(
         title: Text(
           "B I R T H D A Y S ",
-          style: GoogleFonts.getFont(
-            'Noto Serif',
-            fontSize: 25,
-            fontWeight: FontWeight.w500,
-          ),
         ),
-        backgroundColor: Color(0xffe8a598),
-        centerTitle: true,
         automaticallyImplyLeading: false,
       ),
       body: Column(
@@ -140,8 +144,8 @@ class _BirthdaysFirebaseScreenState extends State<BirthdaysFirebaseScreen> {
             margin: EdgeInsets.only(top: 20, left: 10),
             child: Text(
               "today's birthdays",
-              style: GoogleFonts.getFont(
-                'Noto Serif',
+              style: TextStyle(
+                fontFamily: 'NotoSerif',
                 fontSize: 22,
                 color: Color(0xff30150d),
                 fontWeight: FontWeight.w500,
@@ -155,115 +159,154 @@ class _BirthdaysFirebaseScreenState extends State<BirthdaysFirebaseScreen> {
               itemCount: todaysBirthdays.length,
               itemBuilder: (BuildContext context, int index) {
                 final names2 = todaysBirthdays[index]['name'];
-                return Dismissible (
+                return Dismissible(
                   key: ObjectKey(names2),
+                  direction: DismissDirection.endToStart,
                   child: Container(
                     height: 70,
                     margin:
-                    EdgeInsets.only(right: 10, left: 10, top: 5, bottom: 5),
+                        EdgeInsets.only(right: 10, left: 10, top: 5, bottom: 5),
                     color: const Color(0xfff8edeb),
                     child: Row(
                       children: [
                         Container(
-                          margin: EdgeInsets.only(right: 15),
+                          margin: EdgeInsets.only(right: 5),
                           child: Container(
-                          margin: EdgeInsets.only(left: 10),
-                          child: CircleAvatar(
-                            backgroundColor: Color(0xfff8edeb),
-                            backgroundImage: AssetImage(
-                              '${todaysBirthdays[index]["imageURL"]}'.toString(),
+                            margin: EdgeInsets.only(right: 5),
+                            child: CircleAvatar(
+                              radius: 30,
+                              backgroundColor: Color(0xfff8edeb),
+                              backgroundImage: AssetImage(
+                                '${todaysBirthdays[index]["imageURL"]}',
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '${todaysBirthdays[index]['name']}'.toString(),
-                              style: GoogleFonts.getFont(
-                                'Noto Serif',
-                                fontSize: 17,
-                                color: Color(0xff30150d),
-                                fontWeight: FontWeight.w500,
-                              ),
+                        DefaultTextStyle(
+                          style: TextStyle(
+                            fontFamily: 'NotoSerif',
+                            fontSize: 15,
+                            color: Color(0xff30150d),
+                            fontWeight: FontWeight.w500,
+                          ),
+                          child: Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '${todaysBirthdays[index]['name']}'
+                                      .toString(),
+                                  style: TextStyle(
+                                    fontFamily: 'NotoSerif',
+                                    fontSize: 17,
+                                    color: Color(0xff30150d),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      '${todaysBirthdays[index]['birthday']}'
+                                          .toString(),
+                                    ),
+                                    Text(
+                                      ' | Turns ',
+                                    ),
+                                    Text(
+                                      '${todaysBirthdays[index]['age']}'
+                                          .toString(),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                        Row(
-                          children: [
-                            Text(
-                              '${todaysBirthdays[index]['birthday']}'.toString(),
-                              style: GoogleFonts.getFont(
-                                'Noto Serif',
-                                fontSize: 15,
-                                color: Color(0xff30150d),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            Text(
-                              ' | Turns ',
-                              style: GoogleFonts.getFont(
-                                'Noto Serif',
-                                fontSize: 15,
-                                color: Color(0xff30150d),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            Text(
-                              '${todaysBirthdays[index]['age']}'.toString(),
-                              style: GoogleFonts.getFont(
-                                'Noto Serif',
-                                fontSize: 15,
-                                color: Color(0xff30150d),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                          ],
-                        ),
-
-                      Spacer(),
+                        Spacer(),
                         IconButton(
                           tooltip: 'More info',
-                          icon: const Icon(Icons.arrow_forward_ios),
+                          icon: Icon(Icons.arrow_forward_ios),
                           color: Color(0xff30150d),
                           onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                            builder: (context) =>
-                              MoreInfoScreen(todaysBirthdays[index]),
-                            ),
-                        );
-                      },
-                      ),
-                    ],
-                  ),
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    MoreInfoScreen(todaysBirthdays[index]),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
-                  onDismissed: (direction) {
-                    setState(() {
-
-                    });
-                    FirebaseDatabase.instance.reference()
-                        .child(loginUser.uid.toString())
-                        .child('person' +
-                        todaysBirthdays[index]["timeStamp"].toString())
-                        .remove();
-                    todaysBirthdays.removeAt(index);
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$names2 has been removed')));
+                  ),
+                  confirmDismiss: (direction) async {
+                    if (direction == DismissDirection.endToStart) {
+                      await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              content: Text(
+                                  "Are you sure you want to delete $names2?"),
+                              actions: [
+                                TextButton(
+                                  child: Text(
+                                    "Cancel",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                TextButton(
+                                  child: Text(
+                                    "Delete",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {});
+                                    FirebaseDatabase.instance
+                                        .reference()
+                                        .child(loginUser.uid.toString())
+                                        .child('person' +
+                                            todaysBirthdays[index]["timeStamp"]
+                                                .toString())
+                                        .remove();
+                                    todaysBirthdays.removeAt(index);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                '$names2 has been removed')));
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            );
+                          });
+                    }
                   },
-                  background: Container(color: Colors.red),
-              );
+                  background: Container(
+                    alignment: AlignmentDirectional.centerEnd,
+                    color: Colors.red,
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                );
               },
-              ),
-              ),
+            ),
+          ),
           Container(
             margin: EdgeInsets.only(top: 20, left: 10),
             child: Text(
               "upcoming birthdays",
-              style: GoogleFonts.getFont(
-                'Noto Serif',
+              style: TextStyle(
+                fontFamily: 'NotoSerif',
                 fontSize: 22,
                 color: Color(0xff30150d),
                 fontWeight: FontWeight.w500,
@@ -271,78 +314,75 @@ class _BirthdaysFirebaseScreenState extends State<BirthdaysFirebaseScreen> {
             ),
           ),
           Expanded(
-            flex: 120,
+            flex: 100,
             child: ListView.builder(
               padding: const EdgeInsets.all(8),
               itemCount: upcomingBirthdays.length,
               itemBuilder: (BuildContext context, int index) {
                 final names = upcomingBirthdays[index]['name'];
-                return Dismissible (
+                return Dismissible(
                   key: ObjectKey(names),
+                  direction: DismissDirection.endToStart,
                   child: Container(
                     height: 70,
                     margin:
-                    EdgeInsets.only(right: 10, left: 10, top: 5, bottom: 5),
+                        EdgeInsets.only(right: 10, left: 10, top: 5, bottom: 5),
                     color: const Color(0xfff8edeb),
                     child: Row(
                       children: [
                         Container(
-                          margin: EdgeInsets.only(right: 15),
+                          margin: EdgeInsets.only(right: 5),
                           child: Container(
-                            margin: EdgeInsets.only(left: 10),
+                            margin: EdgeInsets.only(right: 5, bottom: 10),
                             child: CircleAvatar(
+                              radius: 30,
                               backgroundColor: Color(0xfff8edeb),
                               backgroundImage: AssetImage(
-                                '${upcomingBirthdays[index]['imageURL']}'.toString(),
+                                '${upcomingBirthdays[index]['imageURL']}',
                               ),
                             ),
                           ),
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '${upcomingBirthdays[index]['name']}'.toString(),
-                              style: GoogleFonts.getFont(
-                                'Noto Serif',
-                                fontSize: 17,
-                                color: Color(0xff30150d),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            Row(
+                        DefaultTextStyle(
+                          style: TextStyle(
+                            fontFamily: 'NotoSerif',
+                            fontSize: 15,
+                            color: Color(0xff30150d),
+                            fontWeight: FontWeight.w500,
+                          ),
+                          child: Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  '${upcomingBirthdays[index]['birthday']}'.toString(),
-                                  style: GoogleFonts.getFont(
-                                    'Noto Serif',
-                                    fontSize: 15,
+                                  '${upcomingBirthdays[index]['name']}'
+                                      .toString(),
+                                  style: TextStyle(
+                                    fontFamily: 'NotoSerif',
+                                    fontSize: 17,
                                     color: Color(0xff30150d),
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                                Text(
-                                  ' | Turns ',
-                                  style: GoogleFonts.getFont(
-                                    'Noto Serif',
-                                    fontSize: 15,
-                                    color: Color(0xff30150d),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                Text(
-                                  '${upcomingBirthdays[index]['age']}'.toString(),
-                                  style: GoogleFonts.getFont(
-                                    'Noto Serif',
-                                    fontSize: 15,
-                                    color: Color(0xff30150d),
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      '${upcomingBirthdays[index]['birthday']}'
+                                          .toString(),
+                                    ),
+                                    Text(
+                                      ' | Turns ',
+                                    ),
+                                    Text(
+                                      '${upcomingBirthdays[index]['age']}'
+                                          .toString(),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
+                          ),
                         ),
                         Spacer(),
                         IconButton(
@@ -359,24 +399,65 @@ class _BirthdaysFirebaseScreenState extends State<BirthdaysFirebaseScreen> {
                           },
                         ),
                       ],
-
                     ),
                   ),
-                  onDismissed: (direction) {
-                    setState(() {
-
-                    });
-                    FirebaseDatabase.instance.reference()
-                        .child(loginUser.uid.toString())
-                        .child('person' +
-                        upcomingBirthdays[index]["timeStamp"].toString())
-                        .remove();
-                    upcomingBirthdays.removeAt(index);
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$names has been removed')));
+                  confirmDismiss: (direction) async {
+                    if (direction == DismissDirection.endToStart) {
+                      await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              content: Text(
+                                  "Are you sure you want to delete $names?"),
+                              actions: [
+                                TextButton(
+                                    child: Text(
+                                      "Cancel",
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    }),
+                                TextButton(
+                                  child: Text(
+                                    "Delete",
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {});
+                                    FirebaseDatabase.instance
+                                        .reference()
+                                        .child(loginUser.uid.toString())
+                                        .child('person' +
+                                            upcomingBirthdays[index]
+                                                    ["timeStamp"]
+                                                .toString())
+                                        .remove();
+                                    upcomingBirthdays.removeAt(index);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                '$names has been removed')));
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            );
+                          });
+                    }
                   },
-                  background: Container(color: Colors.red),
-
-                  );
+                  background: Container(
+                    alignment: AlignmentDirectional.centerEnd,
+                    color: Colors.red,
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                );
               },
             ),
           ),
@@ -396,7 +477,7 @@ class _BirthdaysFirebaseScreenState extends State<BirthdaysFirebaseScreen> {
                   tooltip: "Add a Birthday",
                   color: Color(0xff30150d),
                   icon:
-                  const Icon(Icons.add_circle_outline_rounded, size: 30.0),
+                      const Icon(Icons.add_circle_outline_rounded, size: 30.0),
                   onPressed: () {
                     Navigator.push(
                       context,

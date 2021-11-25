@@ -1,10 +1,9 @@
 import 'dart:math';
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'dart:async';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:cake_time/notification_service.dart';
 
 class AddBirthdayScreen extends StatefulWidget {
@@ -17,339 +16,248 @@ class AddBirthdayScreen extends StatefulWidget {
 class _AddBirthdayScreenState extends State<AddBirthdayScreen> {
   late FirebaseAuth _auth = FirebaseAuth.instance;
   late User loginUser;
+  var dateController = TextEditingController();
+  var timeController = TextEditingController();
+  var nameController = TextEditingController();
+  var selectedDT;
+  var selectedRelationship;
+  DateTime selectedDate = DateTime.now();
+  TimeOfDay _time = TimeOfDay(hour: 12, minute: 0);
 
   @override
   void initState() {
     super.initState();
     getCurrentUser().whenComplete(() {
-      setState(() {
-
-      });
+      setState(() {});
     });
   }
+
   Future<void> getCurrentUser() async {
     final user = _auth.currentUser;
-    if(user != null) {
+    if (user != null) {
       loginUser = user;
-      print("Current user UID is:" + loginUser.uid.toString());
     }
   }
-
-  var _controller = TextEditingController();
-  var timeController = TextEditingController();
-  var giftController = TextEditingController();
-  var nameController = TextEditingController();
-  var dateValue = TextEditingController();
-  var selectedDT;
-
-  DateTime selectedDate = DateTime.now();
-  TimeOfDay _time = TimeOfDay(hour: 12, minute: 0);
-  String? dropdownValue = "Select relationship";
-
-  var relationshipTypes = [
-    "Select relationship",
-    "Family",
-    "Friend",
-    "Co-worker",
-    "Significant other"
-  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff8edeb),
       appBar: AppBar(
         title: Text(
-          "A D D   B I R T H D A Y",
-          style: GoogleFonts.getFont(
-            'Noto Serif',
-            fontSize: 25,
-            fontWeight: FontWeight.w500,
-          ),
+          "A D D  B I R T H D A Y",
         ),
-        backgroundColor: Color(0xffe8a598),
-        centerTitle: true,
-        //automaticallyImplyLeading: false,
       ),
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints:
-              BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: EdgeInsets.only(left: 15, top: 20),
-                child: Text(
-                  "Name:",
-                  style: GoogleFonts.getFont(
-                    'Noto Serif',
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ConstrainedBox(
+              constraints:
+                  BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+              child: Container(
+                child: DefaultTextStyle(
+                  style: TextStyle(
+                    fontFamily: 'NotoSerif',
+                    fontSize: 17,
                     color: Color(0xff30150d),
-                  ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(bottom: 30),
-                    padding: const EdgeInsets.all(8),
-                    width: 400,
-                    child: Container(
-                      height: 50,
-                      child: TextField(
-                        controller: nameController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          hintStyle: TextStyle(color: Colors.black45),
-                          labelText: "Enter name",
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 15),
-                child: Text(
-                  "Birthday:",
-                  style: GoogleFonts.getFont(
-                    'Noto Serif',
-                    fontSize: 13,
                     fontWeight: FontWeight.w500,
-                    color: Color(0xff30150d),
                   ),
-                ),
-              ),
-              Center(
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 30),
-                  padding: const EdgeInsets.all(8),
-                  width: 400,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        height: 50,
-                        child: GestureDetector(
-                          child: TextFormField(
-                            controller: _controller,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                        margin: EdgeInsets.only(left: 20, top: 20),
+                        child: Text(
+                          "Name:",
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(bottom: 55),
+                            padding: const EdgeInsets.all(8),
+                            width: 360,
+                            child: Container(
+                              height: 50,
+                              child: TextField(
+                                controller: nameController,
+                                decoration: InputDecoration(
+                                  labelText: "Enter name",
+                                ),
                               ),
-                              hintStyle: TextStyle(color: Colors.black45),
-                              suffixIcon: Icon(Icons.calendar_today_outlined),
-                              labelText: "Enter Birthday",
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 20),
+                        child: Text(
+                          "Birthday:",
+                        ),
+                      ),
+                      Center(
+                        child: Container(
+                          margin: EdgeInsets.only(bottom: 55),
+                          padding: const EdgeInsets.all(8),
+                          width: 360,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: 50,
+                                child: GestureDetector(
+                                  child: TextFormField(
+                                    controller: dateController,
+                                    decoration: InputDecoration(
+                                      labelText: "Enter Birthday",
+                                    ),
+                                    onTap: () {
+                                      selectDate(context);
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 20),
+                        child: Text(
+                          "Reminder Time:",
+                        ),
+                      ),
+                      Center(
+                        child: Container(
+                          width: 360,
+                          height: 68,
+                          margin: EdgeInsets.only(bottom: 55),
+                          padding: const EdgeInsets.all(8),
+                          child: TextField(
+                            controller: timeController,
+                            decoration: InputDecoration(
+                              labelText: "Enter Reminder Time",
                             ),
                             onTap: () {
-                              _selectDate(context);
+                              selectTime();
                             },
                           ),
                         ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 20),
+                        child: Text(
+                          "Relationship to Person: ",
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 360,
+                            margin: EdgeInsets.only(bottom: 55),
+                            padding: const EdgeInsets.all(8),
+                            child: Container(
+                              height: 56,
+                              child: DropdownButtonFormField(
+                                decoration: InputDecoration(
+                                  hintText: 'Select relationship',
+                                ),
+                                value: selectedRelationship,
+                                items: [
+                                  "Family",
+                                  "Friend",
+                                  "Co-worker",
+                                  "Significant Other",
+                                  "Other"
+                                ]
+                                    .map((label) => DropdownMenuItem(
+                                          child: Text(label),
+                                          value: label,
+                                        ))
+                                    .toList(),
+                                onChanged: (value) {
+                                  setState(() => selectedRelationship = value);
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 180,
+                            height: 45,
+                            child: OutlinedButton(
+                              child: Text(
+                                "Add to Birthdays",
+                                style: TextStyle(
+                                  fontSize: 17,
+                                ),
+                              ),
+                              onPressed: () {
+                                var timeStamp =
+                                    new DateTime.now().millisecondsSinceEpoch;
+                                var selectedDT =
+                                    ("${selectedDate.month}/${selectedDate.day}/${selectedDate.year}");
+                                var month = selectedDate.month;
+                                var day = selectedDate.day;
+                                var year = selectedDate.year;
+                                DateTime birthday = DateTime(
+                                    DateTime.now().year,
+                                    selectedDate.month,
+                                    selectedDate.day,
+                                    _time.hour,
+                                    _time.minute);
+                                FirebaseDatabase.instance
+                                    .reference()
+                                    .child(loginUser.uid.toString() +
+                                        "/person" +
+                                        timeStamp.toString())
+                                    .set({
+                                  "name": nameController.text,
+                                  "month": month,
+                                  "day": day,
+                                  "year": year,
+                                  "birthday": dateController.text,
+                                  "timeStamp": timeStamp.toString(),
+                                  "time": _time.toString(),
+                                  "relationship": selectedRelationship,
+                                  "zodiac": calculateZodiac(selectedDT),
+                                  "imageURL": 'assets/todays.png',
+                                }).then((value) {
+                                  print("Successfully added");
+                                }).catchError((error) {
+                                  print("Failed to add." + error.toString());
+                                });
+                                var randomizer = new Random();
+                                int id;
+                                var numID = randomizer.nextInt(10000);
+                                id = numID;
+                                NotificationService().showScheduleNotification(id, "title", "body", nameController.text, 10, birthday);
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
               ),
-              Container(
-                margin: EdgeInsets.only(left: 15),
-                child: Text(
-                  "Reminder Time:",
-                  style: GoogleFonts.getFont(
-                    'Noto Serif',
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xff30150d),
-                  ),
-                ),
-              ),
-              Center(
-                child: Container(
-                  width: 400,
-                  height: 68,
-                  margin: EdgeInsets.only(bottom: 30),
-                  padding: const EdgeInsets.all(8),
-                  child: TextField(
-                    controller: timeController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      hintStyle: TextStyle(color: Colors.black45),
-                      suffixIcon: Icon(Icons.access_time_rounded),
-                      labelText: "Enter Reminder Time",
-                    ),
-                    onTap: () {
-                      _selectTime();
-                    },
-                  ),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 15),
-                child: Text(
-                  "Relationship to Person ",
-                  style: GoogleFonts.getFont(
-                    'Noto Serif',
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xff30150d),
-                  ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 400,
-                    margin: EdgeInsets.only(bottom: 30),
-                    padding: const EdgeInsets.all(8),
-                    child: Container(
-                      height: 56,
-                      child: DropdownButtonFormField(
-                        isExpanded: true,
-                        value: dropdownValue,
-                        icon: Icon(Icons.keyboard_arrow_down),
-                        style: new TextStyle(
-                          color: Colors.black,
-                        ),
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        items:
-                            relationshipTypes.map((String relationshipTypes) {
-                          return DropdownMenuItem(
-                            value: relationshipTypes,
-                            child: Text(relationshipTypes),
-                          );
-                        }).toList(),
-                        onChanged: (String? newRelationship) {
-                          setState(() {
-                            dropdownValue = newRelationship;
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 15),
-                child: Text(
-                  "What gift did you get them last year",
-                  style: GoogleFonts.getFont(
-                    'Noto Serif',
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xff30150d),
-                  ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(bottom: 32),
-                    padding: const EdgeInsets.all(8),
-                    width: 400,
-                    child: Container(
-                      height: 50,
-                      child: TextField(
-                        controller: giftController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          hintStyle: TextStyle(color: Colors.black45),
-                          labelText: "Enter gift",
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 150,
-                    height: 45,
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        shape: StadiumBorder(),
-                        side: BorderSide(
-                          width: 3.0,
-                          color: Color(0xff30150d),
-                        ),
-                      ),
-                      child: Text(
-                        "Add to List",
-                        style: GoogleFonts.getFont(
-                          'Noto Serif',
-                          fontSize: 15,
-                          color: Color(0xff30150d),
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      onPressed: () {
-                        var timeStamp =
-                            new DateTime.now().millisecondsSinceEpoch;
-                        var selectedDT =
-                            ("${selectedDate.month}/${selectedDate.day}/${selectedDate.year}");
-                        var month = selectedDate.month;
-                        var day = selectedDate.day;
-                        var year = selectedDate.year;
-                        DateTime birthday = DateTime(DateTime.now().year, selectedDate.month, selectedDate.day, _time.hour, _time.minute);
-                        FirebaseDatabase.instance.reference().child(loginUser.uid.toString() + "/person" + timeStamp.toString()).set({
-                          "name": nameController.text,
-                          "month": month,
-                          "day": day,
-                          "year": year,
-                          //stores birthday as month/day/year for appearance sake
-                          "birthday": _controller.text,
-
-                          //stores birthday as milliseconds for calculations sake
-                          "timeStamp": timeStamp.toString(),
-                          "time": _time.toString(),
-                          "relationship": dropdownValue,
-                          "zodiac": calculateZodiac(selectedDT),
-                          "gift": giftController.text,
-                          "imageURL": 'assets/moreinfo.png',
-                        }).then((value) {
-                          print("Successfully added");
-                        }).catchError((error) {
-                          print("Failed to add." + error.toString());
-                        });
-                       // var randomizer = new Random();
-                       // int id;
-                       // var numID = randomizer.nextInt(10000);
-                       // id = numID;
-                        //NotificationService().showScheduleNotification(id,
-                         //   "title", "body", nameController.text, 10, birthday, loginUser);
-
-
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Future<void> _selectDate(BuildContext context) async {
+  Future<void> selectDate(BuildContext context) async {
     final DateTime? selected = await showDatePicker(
         context: context,
         initialDate: selectedDate,
@@ -374,12 +282,12 @@ class _AddBirthdayScreenState extends State<AddBirthdayScreen> {
     if (selected != null && selected != selectedDate)
       setState(() {
         selectedDate = selected;
-        _controller.text =
+        dateController.text =
             "${selectedDate.month}/${selectedDate.day}/${selectedDate.year}";
       });
   }
 
-  void _selectTime() async {
+  void selectTime() async {
     final TimeOfDay? newTime = await showTimePicker(
         context: context,
         initialTime: _time,
@@ -392,7 +300,6 @@ class _AddBirthdayScreenState extends State<AddBirthdayScreen> {
                 surface: Color(0xfff8edeb),
                 onSurface: Color(0xff30150d),
               ),
-              //dialogBackgroundColor:Color(0xff30150d),
             ),
             child: picker!,
           );
@@ -415,16 +322,10 @@ class _AddBirthdayScreenState extends State<AddBirthdayScreen> {
     int personDay = selectedDate.day.toInt();
     int turningAge;
 
-    // if person's birthday month is greater than the current month, use current year to calculate their turning age
-    if (personMonth > currentMonth) {
+    if ((personMonth > currentMonth) ||
+        (personMonth == currentMonth && personDay > currentDay)) {
       turningAge = (currentYear - personYear).toInt();
-    } else if (personMonth == currentMonth && personDay > currentDay) {
-      turningAge = (currentYear - personYear).toInt();
-    } else if (personMonth == currentMonth && personDay < currentDay) {
-      turningAge = (nextYear - personYear).toInt();
-    }
-    // otherwise, use the next year to calculate their turning age
-    else {
+    } else {
       turningAge = (nextYear - personYear).toInt();
     }
     return turningAge.toString();
@@ -432,93 +333,44 @@ class _AddBirthdayScreenState extends State<AddBirthdayScreen> {
 
   String calculateZodiac(var selectedDT) {
     int month = selectedDate.month.toInt();
-    String zodiac = " ";
     int day = selectedDate.day.toInt();
+    String zodiac = " ";
     if (month == 3) {
-      if (day >= 21 && day <= 31) {
-        zodiac = "Aries";
-      } else {
-        zodiac = "Pisces";
-      }
+      (day <= 21 && day >= 1) ? zodiac = "Pisces" : zodiac = "Aries";
     }
     if (month == 4) {
-      if (day <= 19 && day >= 1) {
-        return "Aries";
-      } else {
-        return "Taurus";
-      }
+      (day <= 19 && day >= 1) ? zodiac = "Aries" : zodiac = "Taurus";
     }
     if (month == 5) {
-      if (day <= 20 && day >= 1) {
-        return "Taurus";
-      } else {
-        return "Gemini";
-      }
+      (day <= 20 && day >= 1) ? zodiac = "Taurus" : zodiac = "Gemini";
     }
     if (month == 6) {
-      if (day <= 20 && day >= 1) {
-        return "Gemini";
-      } else {
-        return "Cancer";
-      }
+      (day <= 21 && day >= 1) ? zodiac = "Gemini" : zodiac = "Cancer";
     }
     if (month == 7) {
-      if (day <= 22 && day >= 1) {
-        return "Cancer";
-      } else {
-        return "Leo";
-      }
+      (day <= 22 && day >= 1) ? zodiac = "Cancer" : zodiac = "Leo";
     }
     if (month == 8) {
-      if (day <= 22 && day >= 1) {
-        return "Leo";
-      } else {
-        return "Virgo";
-      }
+      (day <= 22 && day >= 1) ? zodiac = "Leo" : zodiac = "Virgo";
     }
     if (month == 9) {
-      if (day <= 22 && day >= 2) {
-        return "Virgo";
-      } else {
-        return "Libra";
-      }
+      (day <= 22 && day >= 1) ? zodiac = "Virgo" : zodiac = "Libra";
     }
     if (month == 10) {
-      if (day <= 22 && day >= 1) {
-        return "Libra";
-      } else {
-        return "Scorpio";
-      }
+      (day <= 22 && day >= 1) ? zodiac = "Libra" : zodiac = "Scorpio";
     }
     if (month == 11) {
-      if (day <= 21 && day >= 1) {
-        return "Scorpio";
-      } else {
-        return "Sagittarius";
-      }
+      (day <= 22 && day >= 1) ? zodiac = "Scorpio" : zodiac = "Sagittarius";
     }
     if (month == 12) {
-      if (day <= 21 && day >= 1) {
-        return "Sagittarius";
-      } else {
-        return "Capricorn";
-      }
+      (day <= 21 && day >= 1) ? zodiac = "Sagittarius" : zodiac = "Capricorn";
     }
     if (month == 1) {
-      if (day <= 20 && day >= 1) {
-        return "Capricorn";
-      } else {
-        return "Aquarius";
-      }
+      (day <= 21 && day >= 1) ? zodiac = "Capricorn" : zodiac = "Aquarius";
     }
     if (month == 2) {
-      if (day <= 18 && day >= 1) {
-        return "Aquarius";
-      } else {
-        return "Pisces";
-      }
+      (day <= 18 && day >= 1) ? zodiac = "Aquarius" : zodiac = "Pisces";
     }
     return zodiac;
   }
 }
-

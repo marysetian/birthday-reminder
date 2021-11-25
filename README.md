@@ -1,6 +1,9 @@
 # birthday_reminder
 
-Birthday reminder app
+A birthday reminder/birthday tracker app that allows users to enter a person's birthday and receive a reminder notification at a specified time.
+    1. The birthdays entered are organized between today's birthdays and upcoming birthdays in a list view.
+
+
 
 ## Getting Started
 
