@@ -201,7 +201,7 @@ class _MoreInfoScreenState extends State<MoreInfoScreen> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(bottom: 10, top: 5),
+                      margin: EdgeInsets.only(bottom: 8, top: 5),
                       height: 40,
                       width: 180,
                       decoration: BoxDecoration(
@@ -221,7 +221,7 @@ class _MoreInfoScreenState extends State<MoreInfoScreen> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 40, right: 300),
+                      margin: EdgeInsets.only(top: 40, right: 310),
                       child: Text(
                         "Notes: ",
                         style: TextStyle(
@@ -233,14 +233,12 @@ class _MoreInfoScreenState extends State<MoreInfoScreen> {
                       ),
                     ),
                     Container(
-                      width: 370,
-                      height: 130,
                       padding: const EdgeInsets.all(8),
                       child: GestureDetector(
                         child: TextFormField(
                           controller: notesController,
                           initialValue: data,
-                          maxLines: 20,
+                          maxLines: 4,
                           keyboardType: TextInputType.multiline,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
@@ -256,7 +254,7 @@ class _MoreInfoScreenState extends State<MoreInfoScreen> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(right: 220),
+                      margin: EdgeInsets.only(right: 240),
                       child: Container(
                         margin: EdgeInsets.only(top: 30),
                         child: Text(
@@ -271,8 +269,6 @@ class _MoreInfoScreenState extends State<MoreInfoScreen> {
                       ),
                     ),
                     Container(
-                      width: 370,
-                      height: 125,
                       padding: const EdgeInsets.all(8),
                       child: GestureDetector(
                         child: TextFormField(
