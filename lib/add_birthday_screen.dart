@@ -32,6 +32,7 @@ class _AddBirthdayScreenState extends State<AddBirthdayScreen> {
     });
   }
 
+  //function that gets the current user
   Future<void> getCurrentUser() async {
     final user = _auth.currentUser;
     if (user != null) {
@@ -44,7 +45,7 @@ class _AddBirthdayScreenState extends State<AddBirthdayScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "A D D  B I R T H D A Y",
+          "Add a Birthday",
         ),
       ),
       resizeToAvoidBottomInset: true,
@@ -235,11 +236,19 @@ class _AddBirthdayScreenState extends State<AddBirthdayScreen> {
                                 }).catchError((error) {
                                   print("Failed to add." + error.toString());
                                 });
+                                //assign a random number for notification id
                                 var randomizer = new Random();
                                 int id;
                                 var numID = randomizer.nextInt(10000);
                                 id = numID;
-                                NotificationService().showScheduleNotification(id, "title", "body", nameController.text, 10, birthday);
+                                //when user presses add to birthdays, call the function showScheduleNotification in the  NotificationService class
+                                NotificationService().showScheduleNotification(
+                                    id,
+                                    "title",
+                                    "body",
+                                    nameController.text,
+                                    10,
+                                    birthday);
                                 Navigator.pop(context);
                               },
                             ),

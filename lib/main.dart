@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
           centerTitle: true,
           titleTextStyle: TextStyle(
             fontFamily: 'PlayfairDisplay',
-            fontSize: 30,
+            fontSize: 35,
             fontWeight: FontWeight.w500,
           ),
           backgroundColor: Color(0xffe8a598),

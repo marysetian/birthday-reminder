@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class MoreInfoScreen extends StatefulWidget {
   var infoDetails;
@@ -36,6 +37,7 @@ class _MoreInfoScreenState extends State<MoreInfoScreen> {
     getNotes();
   }
 
+  //function that calculates how many days until the person's birthday
   Future<void> calculateDays(DateTime from, DateTime to) async {
     var personMonth = widget.infoDetails["month"];
     var personDay = widget.infoDetails["day"];
@@ -62,6 +64,7 @@ class _MoreInfoScreenState extends State<MoreInfoScreen> {
     }
   }
 
+  //function that saves the notes and gift text field into firebase
   void save() {
     var timeStamp = widget.infoDetails['timeStamp'];
     FirebaseDatabase.instance
@@ -73,6 +76,7 @@ class _MoreInfoScreenState extends State<MoreInfoScreen> {
     });
   }
 
+  //function that retrieves the notes and gift from firebase
   void getNotes() {
     var timeStamp = widget.infoDetails['timeStamp'];
     FirebaseDatabase.instance
@@ -100,7 +104,7 @@ class _MoreInfoScreenState extends State<MoreInfoScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "M O R E  I N F O",
+          "More Info",
         ),
       ),
       body: GestureDetector(

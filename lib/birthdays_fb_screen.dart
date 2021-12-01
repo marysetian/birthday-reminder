@@ -103,7 +103,6 @@ class _BirthdaysFirebaseScreenState extends State<BirthdaysFirebaseScreen> {
           upcomingBirthdayTmpList.add(v);
         }
       });
-      //do set state to show it's been updated
       setState(() {});
       upcomingBirthdays = upcomingBirthdayTmpList;
       todaysBirthdays = todayBirthdayTmpList;
@@ -114,6 +113,7 @@ class _BirthdaysFirebaseScreenState extends State<BirthdaysFirebaseScreen> {
       await showDialog(
           context: context,
           builder: (BuildContext context) {
+            //if there aren't any birthdays entered, show this dialog box
             return AlertDialog(
               content: Text(
                   "Looks like you don't have any birthdays entered. To get started, click on the add icon on the bottom app bar!"),
@@ -133,7 +133,7 @@ class _BirthdaysFirebaseScreenState extends State<BirthdaysFirebaseScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "B I R T H D A Y S ",
+          "Birthdays",
         ),
         automaticallyImplyLeading: false,
       ),

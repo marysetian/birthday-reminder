@@ -33,12 +33,7 @@ class NotificationService {
   Future<void> showScheduleNotification(int id, String title, String body,
       String name, int seconds, DateTime birthday) async {
     await flutterLocalNotificationsPlugin.zonedSchedule(
-      id,
-      'Birthday Reminder',
-      "It's " +
-          name +
-          "'s" +
-          " birthday! Don't forget to wish them a happy birthday :)",
+      id, 'Birthday Reminder', "It's " + name + "'s" + " birthday! Don't forget to wish them a happy birthday :)",
       tz.TZDateTime.from(birthday, tz.local),
       const NotificationDetails(
         android: AndroidNotificationDetails(
